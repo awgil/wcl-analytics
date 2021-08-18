@@ -20,6 +20,20 @@ int main()
 	anal.configNPC(21216, -16, 73, 600000); // hydross
 	anal.configNPC(22035, -16, 71); // pure spawn of hydross
 	anal.configNPC(22036, -8, 71); // tainted spawn of hydross
+	anal.configNPC(21217, 1, 73); // lurker
+	anal.configNPC(21865, 1, 70); // coilfang ambusher (ranged)
+	anal.configNPC(21873, 1, 70); // colifang guardian (melee)
+	anal.configNPC(21213, 1, 73); // morogrim
+	anal.configNPC(21920, 1, 71); // tidewalker lurker (murloc)
+	anal.configNPC(21214, 1, 73); // fathom-lord karathress
+	anal.configNPC(21964, 1, 71); // fathom-lord caribdis
+	anal.configNPC(21965, 1, 71); // fathom-lord tidalvess
+	anal.configNPC(21966, 1, 71); // fathom-lord sharkkis
+	anal.configNPC(21215, 1, 73); // leotheras
+	anal.configNPC(21806, 1, 71); // greyheart spellbinder (leotheras initial mob)
+	anal.configNPC(21212, 1, 73); // lady vashj
+	anal.configNPC(22055, 1, 70); // coilfang elite (naga)
+	anal.configNPC(22056, 1, 70); // coilfang strider
 
 	WCLFetcher conn;
 	auto sscTkReports = conn.fetchReportsForZone(1010);
