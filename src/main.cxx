@@ -34,6 +34,13 @@ int main()
 	anal.configNPC(21212, 1, 73); // lady vashj
 	anal.configNPC(22055, 1, 70); // coilfang elite (naga)
 	anal.configNPC(22056, 1, 70); // coilfang strider
+	anal.configNPC(19514, 1, 73); // al'ar
+	anal.configNPC(19551, 1, 70); // ember of al'ar
+	anal.configNPC(19516, 1, 73); // void reaver
+	anal.configNPC(18805, 1, 73); // astromancer solarian
+	// 18925 (agent): lvl 69-70
+	anal.configNPC(18806, 1, 72); // solarium priest
+	// TODO: kael'thas
 
 	WCLFetcher conn;
 	auto sscTkReports = conn.fetchReportsForZone(1010);
@@ -57,21 +64,26 @@ int main()
 		}
 		std::cout << "Processing report " << code << ": " << msg << std::endl;
 
-		if (!encounterCounts[623])
-			continue;
+		for (auto& fight : report.fights)
+		{
+			if (fight.encounterID == 0)
+				continue; // skip trash fights...
 
-		auto processHydrossFight = [&](const ReportFight& fight) {
+			if (fight.encounterID == 733)
+				continue; // skip kael'thas (TODO)
+
+			if (fight.encounterID != 623)
+				continue; // TODO: process non-hydross fights...
+
 			auto combatants = conn.fetchCombatantInfo(code, fight);
 			if (!combatants)
 			{
 				std::cout << "-> fight " << fight.id << " has invalid combatants, skipping" << std::endl;
-				return;
+				continue;
 			}
+
 			anal.analyzeFight(conn, report, fight, *combatants);
-		};
-		for (auto& fight : report.fights)
-			if (fight.encounterID == 623)
-				processHydrossFight(fight);
+		}
 	}
 
 	for (auto& [npc, data] : anal.data())

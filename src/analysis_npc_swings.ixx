@@ -64,8 +64,8 @@ export {
 				if (!dmg)
 					continue;
 
-				auto actorGameID = report.actors[dmg->source.actorID != -1 ? dmg->source.actorID : 0].gameID;
-				auto iData = mData.find(actorGameID);
+				auto& actor = report.actors[dmg->source.actorID != -1 ? dmg->source.actorID : 0];
+				auto iData = mData.find(actor.gameID);
 				if (iData == mData.end())
 					continue; // don't care about this actor
 				auto& data = iData->second;
@@ -120,8 +120,8 @@ export {
 				if (curMin > data.damageMax || curMax < data.damageMin)
 				{
 					// current range does not intersect with range gathered so far, report an outlier and ignore
-					std::cout << std::format("- outlier: report {}, fight {}, time {} ({}): range so far [{}-{}], new range [{}-{}]",
-						report.code, fight.id, (event.timestamp - fight.startTime) * 0.001f, event.timestamp, data.damageMin, data.damageMax, curMin, curMax) << std::endl;
+					std::cout << std::format("- outlier: report {}, fight {}, time {} ({}): target {}, range so far [{}-{}], new range [{}-{}]",
+						report.code, fight.id, (event.timestamp - fight.startTime) * 0.001f, event.timestamp, actor.name, data.damageMin, data.damageMax, curMin, curMax) << std::endl;
 					++data.numOutliers;
 					continue;
 				}

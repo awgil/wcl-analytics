@@ -53,29 +53,13 @@ export {
 				if (!track.empty() && track.back().timestamp == event.timestamp)
 				{
 					// handle double change at the same time
-					if (aura->isApply)
+					if (track.back().remove != aura->isRemove)
 					{
-						if (track.back().remove)
-						{
-							track.back().remove = false; // convert remove to refresh and pulse (apply+remove+apply) to apply
-							track.back().implicit = true;
-						}
-						// else: refresh+apply or apply+apply are left as-is
+						// remove/pulse -> apply/refresh -or- add/refresh -> remove
+						track.back().remove = aura->isRemove;
+						track.back().implicit = true;
 					}
-					else if (aura->isRemove)
-					{
-						if (!track.back().remove)
-						{
-							track.back().remove = true; // convert apply to pulse and refresh to remove
-							track.back().implicit = true;
-						}
-						// remove/pulse -> remove is double remove, ignore...
-					}
-					else
-					{
-						assert(!track.back().remove); // ??? remove/pulse + refresh, never seen one...
-						// apply/refresh + refresh - just ignore second refresh
-					}
+					// else: remove/pulse -> remove -or- add/refresh -> apply/refresh - just ignore second event
 					continue;
 				}
 
