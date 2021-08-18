@@ -1,0 +1,22 @@
+[targetID][abilityID][sourceID] = [ { start, end, flags(inferred-start, start-with-refresh, end-with-refresh. end-with-reapply) } ]
+
+damage > fade == ???
+fade > damage == aura still applies (!)
+
+damage > apply == aura does not apply (confirmed: hit for 7058 == 5770 * 1.22, then CoR application which gives delta 0.295 > 0.22)
+apply > damage == aura applies (confirmed: hit for 9931 == 5770 * 1.72 right after CoR application; without it delta @320 = 0.208 < 0.22)
+
+fade 25203 (demo -300), dmg 1.628; no-apply gives +0.295 (ok), apply gives +0.101 or less -> no-apply confirmed
+
+
+----------------------
+-[********]----[****]- (0) -300, -120
+---[**]--[**]-[****]-- (0) -248, 0
+--[**************]---- (1) +135
+----------------------
+ > convert to ts+edge <
+ +        -    +    -
+   +  -  +  - +    -
+  +              -
+ > sort <
++1 +3 +2 -2 +2 -1 -2 +2 +1 -3 -2 -1
