@@ -95,14 +95,23 @@ export {
 				}
 				else
 				{
-					if (track.empty())
+					if (!track.empty())
+					{
+						// note: sometimes we get refresh/remove after remove, this is weird :( convert into implicit apply/pulse, that's not ideal though...
+						track.push_back({ event.timestamp, track.back().remove, aura->isRemove, track.back().remove });
+					}
+					else if (implicitStartTS < event.timestamp)
 					{
 						// remove/refresh as a first event - create implicit apply
-						assert(implicitStartTS < event.timestamp);
 						track.push_back({ implicitStartTS, true, false, true });
+						track.push_back({ event.timestamp, false, aura->isRemove, false });
 					}
-					// note: sometimes we get refresh/remove after remove, this is weird :( convert into implicit apply/pulse, that's not ideal though...
-					track.push_back({ event.timestamp, track.back().remove, aura->isRemove, track.back().remove });
+					else
+					{
+						assert(implicitStartTS == event.timestamp);
+						// remove/refresh right at fight start - create a single apply/pulse event
+						track.push_back({ event.timestamp, true, aura->isRemove, true });
+					}
 				}
 			}
 

@@ -3,6 +3,7 @@ import analysis.npc_swings;
 #include <nlohmann/json.hpp>
 #include <format>
 #include <iostream>
+#include <ranges>
 #include <variant>
 
 // dmg formula: damage = multiplier * ( [5, 7.5] + AP / factor )
@@ -239,8 +240,9 @@ int main()
 	WCLFetcher conn;
 	auto sscTkReports = conn.fetchReportsForZone(1010);
 	int processedReports = 0;
-	for (auto& code : sscTkReports)
+	for (auto& code : std::ranges::drop_view(sscTkReports, processedReports))
 	{
+		++processedReports;
 		auto report = conn.fetchReport(code);
 
 		std::unordered_map<int, int> encounterCounts;
@@ -377,8 +379,6 @@ int main()
 		for (auto& fight : report.fights)
 			if (fight.encounterID == 623)
 				processHydrossFight(fight);
-
-		++processedReports;
 	}
 
 	//std::cout << std::format("Calculated range: [{}-{}], based on {} events ({} outliers, {} skipped due to suspect AP, {} skipped due to AP change in same tick)", dmgMin, dmgMax, numDmgEvents, numOutliers, numSuspectAP, numSuspectAuraChange) << std::endl;
