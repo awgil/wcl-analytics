@@ -29,11 +29,24 @@ export {
 		std::string subtype;
 	};
 
+	// bitfield
+	enum class School : uint8_t
+	{
+		None = 0,
+		Physical = 1,
+		Holy = 2,
+		Fire = 4,
+		Nature = 8,
+		Frost = 16,
+		Shadow = 32,
+		Arcane = 64,
+	};
+
 	struct ReportAbility
 	{
 		int gameID;
+		School type = School::None;
 		std::string name;
-		std::string type;
 	};
 
 	struct ReportFightNPC
@@ -160,7 +173,11 @@ export {
 			}
 			for (auto& ability : masterData["abilities"])
 			{
-				res.abilities.push_back({ ability["gameID"].get<int>(), ability["name"].get<std::string>(), ability["type"].get<std::string>() });
+				auto type = ability["type"].get<std::string>();
+				char* typeEnd = nullptr;
+				auto school = std::strtoll(type.c_str(), &typeEnd, 10);
+				assert(school >= 0 && school < 128 && !*typeEnd);
+				res.abilities.push_back({ ability["gameID"].get<int>(), static_cast<School>(school), ability["name"].get<std::string>() });
 			}
 			for (auto& fight : report["fights"])
 			{

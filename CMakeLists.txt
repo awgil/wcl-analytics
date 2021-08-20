@@ -24,9 +24,10 @@ FetchContent_MakeAvailable(nlohmann_json)
 # main project
 file(GLOB_RECURSE src RELATIVE "${CMAKE_SOURCE_DIR}" CONFIGURE_DEPENDS "src/*")
 add_executable(wcl-analytics ${src} nlohmann_json.natvis)
-target_compile_features(wcl-analytics PUBLIC cxx_std_23)
+target_compile_features(wcl-analytics PRIVATE cxx_std_23)
 target_compile_options(wcl-analytics PRIVATE /W4 /WX)
 target_link_libraries(wcl-analytics PRIVATE cpr::cpr nlohmann_json::nlohmann_json)
+target_link_options(wcl-analytics PRIVATE /DEBUG)
 
 set_property(DIRECTORY ${CMAKE_CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT wcl-analytics)
 
